@@ -1,3 +1,4 @@
+import ClothesStoreCards from "@/components/ecommerce/Clothes-store-cards";
 import ItemList from "@/components/landing-page/ItemList";
 import UserImageCircle from "@/components/landing-page/UserImageCircle";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
@@ -5,7 +6,7 @@ import { Star } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="bg-slate-50">
+    <div className="bg-orange-50">
       <section className="text-center">
         <MaxWidthWrapper className="pb-24 pt-10 lg:grid lg:grid-cols-3 sm:pb-32 lg:gap-x-0 xl:gap-x-8 lg:pt-24 xl:pt-32 lg:pb-52">
           <div className="col-span-2 px-6 lg:px-0 lg:pt-4">
@@ -71,12 +72,20 @@ export default function Home() {
               <img
                 src="/darkwork-clothes.png"
                 alt="Ropa Darkwork"
-                className="absolue w-96 lg:w-96 left-56 -top-20 select-none hidden sm:block lg:hidden xl:block"
+                className="absolue w-96 left-56 -top-20 select-none sm:block xl:block"
               />
             </div>
           </div>
         </MaxWidthWrapper>
       </section>
+
+      {/* ECOMMERCE SECTION */}
+      <section className="bg-black">
+        <MaxWidthWrapper className="flex flex-col items-center gap-16 sm:gap-32">
+          <ClothesStoreCards />
+        </MaxWidthWrapper>
+      </section>
+
     </div>
   );
 }
