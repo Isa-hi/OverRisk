@@ -80,7 +80,7 @@ export default function Home() {
       </section>
 
       {/* ECOMMERCE SECTION */}
-      <section className="bg-black">
+      <section className="bg-amber-500">
         <MaxWidthWrapper className="flex flex-col items-center gap-16 sm:gap-32">
           <ClothesStoreCards />
         </MaxWidthWrapper>

@@ -5,14 +5,32 @@ import { ShoppingCart } from "lucide-react"
 
 export default async function ClothesStoreCards() {
 
-  const clothingItems = await prisma.product.findMany()
+  //const clothingItems = await prisma.product.findMany()
+  const clothingItems = [{
+    id: 1,
+    name: "Item uno",
+    price: 159.99
+  }, {
+    id: 2,
+    name: "Item uno",
+    price: 159.99
+  },
+  {
+    id: 3,
+    name: "Item uno",
+    price: 159.99
+  }, {
+    id: 4,
+    name: "Item uno",
+    price: 159.99
+  }]
   console.log(clothingItems);
   
 
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6 text-center">Nuestra colección</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {clothingItems.map((item) => (
           <Card key={item.id} className="flex flex-col justify-between">
             <CardHeader>

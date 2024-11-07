@@ -1,7 +1,7 @@
 import Link from "next/link";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { buttonVariants } from "./ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShoppingCartIcon } from "lucide-react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export default async function Navbar() {
@@ -82,6 +82,16 @@ export default async function Navbar() {
                   >
                     Crear diseño
                     <ArrowRight className="ml-1.5 size-5" />
+                  </Link>
+
+                  <Link
+                    href="/shopping-cart"
+                    className={buttonVariants({
+                      size: "sm",
+                      className: "hidden sm:flex items-center gap-1 !bg-black",
+                    })}
+                  >
+                  <ShoppingCartIcon className="size-16" />
                   </Link>
               </>
             )}
