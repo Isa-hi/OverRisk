@@ -2,7 +2,7 @@ import { Instagram, Phone } from "lucide-react"
 
 export default function Footer() {
   return (
-    <footer className="text-black py-8 border-t">
+    <footer className="text-black bg-orange-50 py-8 border-t">
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center space-y-4">
           <p className="text-lg font-semibold text-center">

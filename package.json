@@ -9,9 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "@kinde-oss/kinde-auth-nextjs": "^2.4.5",
     "@prisma/client": "^5.22.0",
+    "@radix-ui/react-aspect-ratio": "^1.1.0",
+    "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-progress": "^1.1.0",
+    "@radix-ui/react-scroll-area": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.2",
     "@uploadthing/react": "^7.1.0",
@@ -22,6 +26,7 @@
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028",
     "react-dropzone": "^14.3.5",
+    "react-rnd": "^10.4.13",
     "shadcn-ui": "^0.9.3",
     "sharp": "^0.32.6",
     "tailwind-merge": "^2.5.4",
