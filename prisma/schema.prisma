@@ -41,4 +41,32 @@ model Configuration {
   width         Int
   imageUrl      String
   croppedImgUrl String?
+  clotheColor   ClotheColor?
+  clotheModel   ClotheModel?
+  clotheSize    ClotheSize?
+}
+
+enum OrderStatus {
+  fulfilled
+  shipped
+  awaiting_shipment
+}
+
+enum ClotheModel {
+  playera
+  sudaera
+}
+
+enum ClotheSize {
+  xs
+  s
+  m
+  lg
+  xl
+  xxl
+}
+
+enum ClotheColor {
+  white
+  black
 }

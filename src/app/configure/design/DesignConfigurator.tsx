@@ -16,6 +16,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useUploadThing } from "@/lib/uploadthing";
 import { useToast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
+import { SaveConfigProps, saveConfigToDB } from "./actions";
+import { useRouter } from "next/navigation";
+import { ClotheModel, ClotheSize } from "@prisma/client";
 
 type DesignConfiguratorProps = {
   configId: string;
@@ -31,6 +35,29 @@ export default function DesignConfigurator({
   imageDimensions,
 }: DesignConfiguratorProps) {
   const {toast} = useToast();
+  const router = useRouter();
+
+  const { mutate : saveConfigMutation } = useMutation({
+    mutationKey: ["save-config"],
+    mutationFn: async (args : SaveConfigProps) => {
+      console.log(args);
+      
+      await Promise.allSettled([saveConfig(), saveConfigToDB(args)])
+    },
+    onError: () => {
+      toast({
+        title: 'Algo salió mal',
+        description: 'No se pudo guardar la configuración. Por favor, intenta de nuevo.',
+        variant: 'destructive'
+      })},
+    onSuccess: () => {
+      toast({
+        title: 'Configuración guardada',
+        description: 'La configuración se guardó correctamente.'
+      })
+      router.push(`/configure/preview?id=${configId}`)
+    }
+  })
 
   const [options, setOptions] = useState<{
     color: (typeof COLORS)[number];
@@ -260,7 +287,11 @@ export default function DesignConfigurator({
                 <p className="font-medium whitespace-nowrap">
                 Total: {formatPrice(options.size.price + options.model.price)}
                 </p>
-              <Button size={'sm'} className="w-full" onClick={saveConfig}>Continuar <ArrowRight className="size-4 ml-1.5 inline" /></Button>
+              <Button size={'sm'} className="w-full" onClick={ () => saveConfigMutation({configId, 
+                clotheColor: options.color.value, 
+                clotheSize: options.size.value as ClotheSize, 
+                clotheModel: options.model.value as ClotheModel
+              })}>Continuar <ArrowRight className="size-4 ml-1.5 inline" /></Button>
             </div>
           </div>
         </div>
