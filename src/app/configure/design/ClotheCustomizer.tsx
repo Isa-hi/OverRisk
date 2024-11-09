@@ -72,10 +72,10 @@ export default function Component({
             }}
             lockAspectRatio
             resizeHandleComponent={{
-              bottomRight: <HandleComponent />,
-              bottomLeft: <HandleComponent />,
-              topRight: <HandleComponent />,
-              topLeft: <HandleComponent />,
+              bottomRight: <HandleComponent className="handle-component" />,
+              bottomLeft: <HandleComponent className="handle-component" />,
+              topRight: <HandleComponent className="handle-component" />,
+              topLeft: <HandleComponent className="handle-component" />,
             }}
             className="absolute z-20 border-[3px] border-primary"
             bounds="parent"

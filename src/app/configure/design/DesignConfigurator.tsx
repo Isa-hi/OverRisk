@@ -58,14 +58,15 @@ export default function DesignConfigurator({
 
   async function saveConfig() {
     try {
-      const {left: clotheLeft, top: clotheTop, width, height} = clotheRef.current!.getBoundingClientRect();
+      toggleHandles(false); // Hide handles and border
+      const {left: clotheLeft, top: clotheTop, width: clotheWidth, height: clotheHeight} = clotheRef.current!.getBoundingClientRect();
       const {left: containerLeft, top: containerTop, width: containerWidth, height: containerHeight} = containerRef.current!.getBoundingClientRect();
 
       const leftOffset = clotheLeft - containerLeft;
       const topOffset = clotheTop - containerTop;
 
-      const actualX = renderedPosition.x - leftOffset;
-      const actualY = renderedPosition.y - topOffset;
+      const actualX = renderedPosition.x + leftOffset;
+      const actualY = renderedPosition.y + topOffset;
 
       const canvas = document.createElement('canvas');
       canvas.width = containerWidth;
@@ -74,6 +75,7 @@ export default function DesignConfigurator({
 
       const containerImage = new Image();
       containerImage.crossOrigin = 'anonymous';
+      containerImage.src = mockupUrl;
       await new Promise((resolve) => containerImage.onload = resolve);
 
       ctx.drawImage(containerImage, 0, 0, containerWidth, containerHeight);
@@ -83,7 +85,7 @@ export default function DesignConfigurator({
       userImage.src = imageUrl;
       await new Promise((resolve) => userImage.onload = resolve);
 
-      //ctx.drawImage(userImage, actualX, actualY, renderedDimension.width, renderedDimension.height);
+      ctx.drawImage(userImage, actualX, actualY, renderedDimension.width, renderedDimension.height);
 
       const base64 = canvas.toDataURL();
       const base64Data = base64.split(',')[1];
@@ -98,7 +100,17 @@ export default function DesignConfigurator({
         description: 'No se pudo guardar la configuración. Por favor, intenta de nuevo.',
         variant: 'destructive'
       })
+    } finally {
+      toggleHandles(true); // Show handles and border
     }
+  }
+
+  function toggleHandles(show: boolean) {
+    const handles = clotheRef.current!.querySelectorAll('.handle-component');
+    handles.forEach(handle => {
+      (handle as HTMLElement).style.display = show ? 'block' : 'none';
+    });
+    (clotheRef.current as HTMLElement).style.border = show ? '3px solid var(--primary)' : 'none';
   }
 
   function base64ToBlob(base64: string, type: string) { // Function to convert a base64 image to a png
