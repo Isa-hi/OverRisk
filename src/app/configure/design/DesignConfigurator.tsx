@@ -58,35 +58,40 @@ export default function DesignConfigurator({
 
   async function saveConfig() {
     try {
-      const {left: clotheLeft, top: clotheTop, width, height} = clotheRef.current!.getBoundingClientRect(); // Get the offset to the edge of the page
-      const {left: containerLeft, top: containerTop} = containerRef.current!.getBoundingClientRect();
+      const {left: clotheLeft, top: clotheTop, width, height} = clotheRef.current!.getBoundingClientRect();
+      const {left: containerLeft, top: containerTop, width: containerWidth, height: containerHeight} = containerRef.current!.getBoundingClientRect();
 
       const leftOffset = clotheLeft - containerLeft;
       const topOffset = clotheTop - containerTop;
-     
-      // Coordinates relative to the container
+
       const actualX = renderedPosition.x - leftOffset;
       const actualY = renderedPosition.y - topOffset;
 
       const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d')!; // Creates a context canvas of the current size of the clothe
+      canvas.width = containerWidth;
+      canvas.height = containerHeight;
+      const ctx = canvas.getContext('2d')!;
+
+      const containerImage = new Image();
+      containerImage.crossOrigin = 'anonymous';
+      await new Promise((resolve) => containerImage.onload = resolve);
+
+      ctx.drawImage(containerImage, 0, 0, containerWidth, containerHeight);
 
       const userImage = new Image();
       userImage.crossOrigin = 'anonymous';
       userImage.src = imageUrl;
-      await new Promise((resolve) => userImage.onload = resolve); // Wait for the image to load
+      await new Promise((resolve) => userImage.onload = resolve);
 
-      ctx.drawImage(userImage, actualX, actualY, renderedDimension.width, renderedDimension.height); // Draw the user image on the canvas
+      //ctx.drawImage(userImage, actualX, actualY, renderedDimension.width, renderedDimension.height);
 
-      const base64 = canvas.toDataURL(); // Convert the canvas to a base64 image
-      const base64Data = base64.split(',')[1]; // Get the base64 data
+      const base64 = canvas.toDataURL();
+      const base64Data = base64.split(',')[1];
 
-      const blob = base64ToBlob(base64Data, 'image/png'); // Convert the base64 data to a blob
-      const file = new File([blob], "filename.png", {type: 'image/png'}); // Convert the blob to an actual png file
+      const blob = base64ToBlob(base64Data, 'image/png');
+      const file = new File([blob], "filename.png", {type: 'image/png'});
 
-      await startUpload([file], {configId});       
+      await startUpload([file], {configId});
     } catch (error) {
       toast({
         title: 'Algo salió mal',
