@@ -6,8 +6,9 @@ import Image from "next/image";
 import { Configuration } from "@prisma/client";
 import { Card } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 type DesignPreviewProps = {
   configuration: Configuration;
@@ -40,7 +41,7 @@ export default function DesignPreview({ configuration }: DesignPreviewProps) {
         <Confetti active={showConfetti} config={confettiConfig} />
       </div>
 
-      <div className="mt-20 grid grid-cols-1 text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
+      <div className="my-20 grid grid-cols-1 text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
         <div className="sm:col-span-4 md:col-span-3 md:row-span-2 md:row-end-2">
           <Card
             className={
@@ -99,23 +100,31 @@ export default function DesignPreview({ configuration }: DesignPreviewProps) {
               <div className="flow-root text-sm">
                 <div className="flex items-center justify-between py-1 mt-2">
                   <p className="text-zinc-700">Subtotal</p>
-                  <p className="text-zinc-700 font-semibold">
+                  <p className="text-zinc-700 ">
                     {formatPrice(configuration.price!)}
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between py-1 mt-2">
                   <p className="text-zinc-700">Envío</p>
-                  <p className="text-zinc-700 font-semibold">Gratis</p>
+                  <p className="text-zinc-700 ">Gratis</p>
                 </div>
 
+                <div className="my-2 h-px bg-gray-200" />
+
                 <div className="flex items-center justify-between py-1 mt-2">
-                  <p className="text-zinc-700">Total</p>
+                  <p className="text-zinc-700 font-semibold">Total</p>
                   <p className="text-zinc-700 font-semibold">
                     {formatPrice(configuration.price!)}
                   </p>
                 </div>
               </div>
+            </div>
+
+            <div className="mt-8 flex justify-end pb-12">
+              <Button className="px-4 sm:px-6 lg:px-8">
+                Proceder al pago <ArrowRight className="size-5 ml-1.5 inline" />
+              </Button>
             </div>
           </div>
         </div>

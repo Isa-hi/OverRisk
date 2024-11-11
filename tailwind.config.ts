@@ -55,7 +55,13 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+		keyframes: {
+			flashing: { "0%, 100%": { opacity: "0.2" }, "20%": { opacity: "1" } }
+		},
+		animation: {
+			flashing: "flashing 1.4s infinite linear"
+		}
   	}
   },
   plugins: [require("tailwindcss-animate")],
