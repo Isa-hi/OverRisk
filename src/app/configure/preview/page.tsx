@@ -8,7 +8,7 @@ type PageProps = {
     }
 }
 export default async function page({searchParams} : PageProps) {
-    const { id } = searchParams;
+    const { id } = await searchParams;
     if(!id || typeof id !== 'string') {
         return notFound();
     }

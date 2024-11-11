@@ -7,10 +7,11 @@ export type SaveConfigProps = {
     clotheColor: ClotheColor,
     clotheSize: ClotheSize,
     clotheModel: ClotheModel,
-    configId: string
+    configId: string,
+    price: number
 }
 // RPC: Remote Procedure Call
-export async function saveConfigToDB({clotheColor, clotheSize, clotheModel, configId} : SaveConfigProps) { 
+export async function saveConfigToDB({clotheColor, clotheSize, clotheModel, configId, price} : SaveConfigProps) { 
     await prisma.configuration.update({
         where: {
             id: configId
@@ -18,7 +19,8 @@ export async function saveConfigToDB({clotheColor, clotheSize, clotheModel, conf
         data: {
             clotheColor,
             clotheSize,
-            clotheModel
+            clotheModel,
+            price
         }
     })
 }

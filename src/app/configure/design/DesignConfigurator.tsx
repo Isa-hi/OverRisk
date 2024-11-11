@@ -290,7 +290,8 @@ export default function DesignConfigurator({
               <Button size={'sm'} className="w-full" onClick={ () => saveConfigMutation({configId, 
                 clotheColor: options.color.value, 
                 clotheSize: options.size.value as ClotheSize, 
-                clotheModel: options.model.value as ClotheModel
+                clotheModel: options.model.value as ClotheModel,
+                price: options.size.price + options.model.price
               })}>Continuar <ArrowRight className="size-4 ml-1.5 inline" /></Button>
             </div>
           </div>
