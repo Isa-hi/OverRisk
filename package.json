@@ -27,6 +27,7 @@
     "next": "15.0.2",
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028",
+    "react-dom-confetti": "^0.2.0",
     "react-dropzone": "^14.3.5",
     "react-rnd": "^10.4.13",
     "shadcn-ui": "^0.9.3",

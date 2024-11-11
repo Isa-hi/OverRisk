@@ -43,15 +43,6 @@ export default function Component({
             />
           </AspectRatio>
 
-          {/* Printable area overlay - using percentage-based positioning */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative left-1 w-[50%] h-[70%]">
-              {/* Semi-transparent mask around printable area */}
-              {/*                 <div className="absolute inset-0 shadow-[0_0_0_9999px_rgba(229,231,235,0.6)] rounded-2xl" />
-               */}{" "}
-            </div>
-          </div>
-
           <Rnd
             default={{
               x: 150,
