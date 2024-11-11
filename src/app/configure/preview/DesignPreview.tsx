@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
 import Image from "next/image";
-import { Configuration } from "@prisma/client";
 import { Card } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { ArrowRight, Check } from "lucide-react";
@@ -13,6 +12,9 @@ import { useMutation } from "@tanstack/react-query";
 import { createCheckoutSession } from "./actions";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import type { Configuration } from "@prisma/client";
+import LoginModal from "@/components/LoginModal";
 
 type DesignPreviewProps = {
   configuration: Configuration;
@@ -21,6 +23,10 @@ type DesignPreviewProps = {
 export default function DesignPreview({ configuration }: DesignPreviewProps) {
   const router = useRouter();
   const {toast} = useToast();
+  const { id } = configuration;
+  const { user } = useKindeBrowserClient();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
   const [showConfetti, setshowConfetti] = useState(false);
   useEffect(() => {
     setshowConfetti(true);
@@ -58,6 +64,16 @@ export default function DesignPreview({ configuration }: DesignPreviewProps) {
     }
   })
 
+  const handleCheckout = () => {
+    if(user) {
+      createCheckoutSession(id);
+    } else {
+      localStorage.setItem("configurationId", id);
+      setIsLoginModalOpen(true);
+    }
+
+  }
+
   return (
     <>
       <div
@@ -66,6 +82,8 @@ export default function DesignPreview({ configuration }: DesignPreviewProps) {
       >
         <Confetti active={showConfetti} config={confettiConfig} />
       </div>
+
+      <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen}/>
 
       <div className="my-20 grid grid-cols-1 text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
         <div className="sm:col-span-4 md:col-span-3 md:row-span-2 md:row-end-2">
@@ -148,7 +166,7 @@ export default function DesignPreview({ configuration }: DesignPreviewProps) {
             </div>
 
             <div className="mt-8 flex justify-end pb-12">
-              <Button onClick={() => createPaymentSessionMutation(configuration.id)} className="px-4 sm:px-6 lg:px-8">
+              <Button onClick={handleCheckout} className="px-4 sm:px-6 lg:px-8">
                 Proceder al pago <ArrowRight className="size-5 ml-1.5 inline" />
               </Button>
             </div>
