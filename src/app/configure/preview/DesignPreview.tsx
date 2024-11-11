@@ -9,12 +9,18 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { ArrowRight, Check } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { createCheckoutSession } from "./actions";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 type DesignPreviewProps = {
   configuration: Configuration;
 };
 
 export default function DesignPreview({ configuration }: DesignPreviewProps) {
+  const router = useRouter();
+  const {toast} = useToast();
   const [showConfetti, setshowConfetti] = useState(false);
   useEffect(() => {
     setshowConfetti(true);
@@ -32,6 +38,26 @@ export default function DesignPreview({ configuration }: DesignPreviewProps) {
     perspective: "501px",
     colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
   };
+
+  const { mutate: createPaymentSessionMutation } = useMutation({
+    mutationKey: ["get-checkout-session"],
+    mutationFn: createCheckoutSession,
+    onSuccess: ({url}) => {
+      if(url) {
+        router.push(url);
+      } else {
+        throw new Error("No se pudo crear la sesión de pago");
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Algo salió mal",
+        description: "Hubo un error en nuestra plataforma, por favor intenta de nuevo",
+        variant: "destructive"
+      })
+    }
+  })
+
   return (
     <>
       <div
@@ -45,7 +71,7 @@ export default function DesignPreview({ configuration }: DesignPreviewProps) {
         <div className="sm:col-span-4 md:col-span-3 md:row-span-2 md:row-end-2">
           <Card
             className={
-              "relative col-span-2 w-full max-w-4xl mx-auto overflow-hidden border-2 border-dashed border-gray-300 rounded-2xl text-center"
+              "relative col-span-2 w-full max-w-4xl mx-auto overflow-hiddenrounded-2xl text-center"
             }
           >
             <div className="relative w-full max-w-2xl mx-auto">
@@ -122,7 +148,7 @@ export default function DesignPreview({ configuration }: DesignPreviewProps) {
             </div>
 
             <div className="mt-8 flex justify-end pb-12">
-              <Button className="px-4 sm:px-6 lg:px-8">
+              <Button onClick={() => createPaymentSessionMutation(configuration.id)} className="px-4 sm:px-6 lg:px-8">
                 Proceder al pago <ArrowRight className="size-5 ml-1.5 inline" />
               </Button>
             </div>

@@ -3,10 +3,29 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 import { buttonVariants } from "./ui/button";
 import { ArrowRight, ShoppingCartIcon } from "lucide-react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { prisma } from "@/lib/prisma";
 
 export default async function Navbar() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+  if ( user ) {
+    const isUserInDB = await prisma.user.findUnique({
+      where: {
+        id: user.id
+      }
+    });
+    console.log("User", user);
+    
+    if (!isUserInDB) {
+      await prisma.user.create({
+        data: {
+          id: user.id,
+          name: user.family_name,
+          email: user.email!
+        }
+      });
+    }
+  }
   const isAdmin = user?.email === process.env.ADMIN_EMAIL;
   return (
     <nav className="sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-orange-200 bg-white/75 backdrop-blur-lg transition-all ">
@@ -52,15 +71,6 @@ export default async function Navbar() {
               </>
             ) : (
               <>
-                <Link
-                  href="/api/auth/register"
-                  className={buttonVariants({
-                    size: "sm",
-                    variant: "ghost",
-                  })}
-                >
-                  Cerrar sesión
-                </Link>
                 <Link
                     href="/api/auth/login"
                     className={buttonVariants({
