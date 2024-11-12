@@ -17,7 +17,9 @@ export default function UploadPage() {
 
   const {startUpload, isUploading} = useUploadThing("imageUploader", {
     onClientUploadComplete: ([data]) => {
+      console.log("Client upload complete", data);      
       const configId = data.serverData.configId;
+      console.log("Config ID", configId);
       startTransition(() => {
         redirect(`/configure/design?id=${configId}`);
       })
