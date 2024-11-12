@@ -86,7 +86,7 @@ export default function DesignConfigurator({
   async function saveConfig() {
     try {
       toggleHandles(false); // Hide handles and border
-      const {left: clotheLeft, top: clotheTop, width: clotheWidth, height: clotheHeight} = clotheRef.current!.getBoundingClientRect();
+      const {left: clotheLeft, top: clotheTop} = clotheRef.current!.getBoundingClientRect();
       const {left: containerLeft, top: containerTop, width: containerWidth, height: containerHeight} = containerRef.current!.getBoundingClientRect();
 
       const leftOffset = clotheLeft - containerLeft;
@@ -104,21 +104,19 @@ export default function DesignConfigurator({
       containerImage.crossOrigin = 'anonymous';
       containerImage.src = mockupUrl;
       await new Promise((resolve) => containerImage.onload = resolve);
-
       ctx.drawImage(containerImage, 0, 0, containerWidth, containerHeight);
 
       const userImage = new Image();
       userImage.crossOrigin = 'anonymous';
       userImage.src = imageUrl;
       await new Promise((resolve) => userImage.onload = resolve);
-
       ctx.drawImage(userImage, actualX, actualY, renderedDimension.width, renderedDimension.height);
 
-      const base64 = canvas.toDataURL();
-      const base64Data = base64.split(',')[1];
+      const base64 = canvas.toDataURL(); // String
+      const base64Data = base64.split(',')[1]; // Remove image/jpg,
 
-      const blob = base64ToBlob(base64Data, 'image/png');
-      const file = new File([blob], "filename.png", {type: 'image/png'});
+      const blob = base64ToBlob(base64Data, 'image/png'); // Ahora sí es binario
+      const file = new File([blob], "filename.png", {type: 'image/png'}); // Archivo real
 
       await startUpload([file], {configId});
     } catch (error) {
