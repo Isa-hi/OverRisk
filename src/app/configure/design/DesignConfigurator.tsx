@@ -120,6 +120,7 @@ export default function DesignConfigurator({
 
       await startUpload([file], {configId});
     } catch (error) {
+      console.log(error);      
       toast({
         title: 'Algo salió mal',
         description: 'No se pudo guardar la configuración. Por favor, intenta de nuevo.',

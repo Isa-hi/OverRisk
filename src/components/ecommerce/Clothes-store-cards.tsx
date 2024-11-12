@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { prisma } from "@/lib/prisma"
+//import { prisma } from "@/lib/prisma"
 import { ShoppingCart } from "lucide-react"
 
 export default async function ClothesStoreCards() {

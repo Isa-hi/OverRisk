@@ -3,9 +3,9 @@ import { notFound } from "next/navigation";
 import DesignPreview from "./DesignPreview";
 
 type PageProps = {
-    searchParams: {
+    searchParams: Promise<{
         [key: string]: string | string[] | undefined;
-    }
+    }> 
 }
 export default async function page({searchParams} : PageProps) {
     const { id } = await searchParams;

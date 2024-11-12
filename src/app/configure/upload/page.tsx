@@ -12,7 +12,7 @@ import Dropzone, { FileRejection } from "react-dropzone";
 export default function UploadPage() {
   const { toast } = useToast();
   const [isDragOver, setIsDragOver] = useState(false);
-  const [isPending, setIsPending] = useTransition();
+  const [isPending] = useTransition();
   const [uploadProgress, setUploadProgress] = useState(45);
 
   const {startUpload, isUploading} = useUploadThing("imageUploader", {

@@ -5,8 +5,6 @@ import { prisma } from "@/lib/prisma";
 
 const f = createUploadthing();
 
-const auth = (req: Request) => ({ id: "fakeId" });
-
 export const ourFileRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB" } })
     .input(
