@@ -64,14 +64,13 @@ export default function DesignPreview({ configuration }: DesignPreviewProps) {
     }
   })
 
-  const handleCheckout = () => {
-    if(user) {
-      createCheckoutSession(id);
+  const handleCheckout = () => {   
+    if(user) {     
+      createPaymentSessionMutation(id);      
     } else {
       localStorage.setItem("configurationId", id);
       setIsLoginModalOpen(true);
     }
-
   }
 
   return (

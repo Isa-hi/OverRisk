@@ -8,21 +8,19 @@ import { prisma } from "@/lib/prisma";
 export default async function Navbar() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  if ( user ) {
+  if (user) {
     const isUserInDB = await prisma.user.findUnique({
       where: {
-        id: user.id
-      }
+        id: user.id,
+      },
     });
-    console.log("User", user);
-    
     if (!isUserInDB) {
       await prisma.user.create({
         data: {
           id: user.id,
           name: user.family_name,
-          email: user.email!
-        }
+          email: user.email!,
+        },
       });
     }
   }
@@ -59,50 +57,59 @@ export default async function Navbar() {
                   </Link>
                 )}
                 <Link
-                    href="/configure/upload"
-                    className={buttonVariants({
-                      size: "sm",
-                      className: "hidden sm:flex items-center gap-1",
-                    })}
-                  >
-                    Crear diseño
-                    <ArrowRight className="ml-1.5 size-5" />
-                  </Link>
+                  href="/configure/upload"
+                  className={buttonVariants({
+                    size: "sm",
+                    className: "hidden sm:flex items-center gap-1",
+                  })}
+                >
+                  Crear diseño
+                  <ArrowRight className="ml-1.5 size-5" />
+                </Link>
               </>
             ) : (
               <>
                 <Link
-                    href="/api/auth/login"
-                    className={buttonVariants({
-                      size: "sm",
-                      variant: "ghost",
-                    })}
-                  >
-                    Iniciar sesión
-                  </Link>
+                  href="/api/auth/register"
+                  className={buttonVariants({
+                    size: "sm",
+                    variant: "ghost",
+                  })}
+                >
+                  Registrarse
+                </Link>
+                <Link
+                  href="/api/auth/login"
+                  className={buttonVariants({
+                    size: "sm",
+                    variant: "ghost",
+                  })}
+                >
+                  Iniciar sesión
+                </Link>
 
-                  <div className="w-px h-8 bg-orange-200 hidden sm:block"/>
+                <div className="w-px h-8 bg-orange-200 hidden sm:block" />
 
-                  <Link
-                    href="/configure/upload"
-                    className={buttonVariants({
-                      size: "sm",
-                      className: "hidden sm:flex items-center gap-1",
-                    })}
-                  >
-                    Crear diseño
-                    <ArrowRight className="ml-1.5 size-5" />
-                  </Link>
+                <Link
+                  href="/configure/upload"
+                  className={buttonVariants({
+                    size: "sm",
+                    className: "hidden sm:flex items-center gap-1",
+                  })}
+                >
+                  Crear diseño
+                  <ArrowRight className="ml-1.5 size-5" />
+                </Link>
 
-                  <Link
-                    href="/shopping-cart"
-                    className={buttonVariants({
-                      size: "sm",
-                      className: "hidden sm:flex items-center gap-1 !bg-black",
-                    })}
-                  >
+                <Link
+                  href="/shopping-cart"
+                  className={buttonVariants({
+                    size: "sm",
+                    className: "hidden sm:flex items-center gap-1 !bg-black",
+                  })}
+                >
                   <ShoppingCartIcon className="size-16" />
-                  </Link>
+                </Link>
               </>
             )}
           </div>

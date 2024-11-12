@@ -36,10 +36,7 @@ export const createCheckoutSession = async (configurationId: string) => {
 
     const price  = configuration.price! * 100
 
-    let order: Order | undefined = undefined
-
-    console.log("User", user);
-    
+    let order: Order | undefined = undefined    
 
     const existingOrder = await prisma.order.findFirst({
         where: {

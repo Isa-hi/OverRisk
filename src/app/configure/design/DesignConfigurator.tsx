@@ -113,7 +113,7 @@ export default function DesignConfigurator({
       ctx.drawImage(userImage, actualX, actualY, renderedDimension.width, renderedDimension.height);
 
       const base64 = canvas.toDataURL(); // String
-      const base64Data = base64.split(',')[1]; // Remove image/jpg,
+      const base64Data = base64.split(',')[1]; // Remove 44844fgyh4er848tghr84h8
 
       const blob = base64ToBlob(base64Data, 'image/png'); // Ahora sí es binario
       const file = new File([blob], "filename.png", {type: 'image/png'}); // Archivo real
