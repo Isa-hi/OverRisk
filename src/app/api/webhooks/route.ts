@@ -4,30 +4,31 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-export async function POST(req:Request) {
+export async function POST(req: Request) {
     try {
         const body = await req.text();
-        const signature = (await headers()).get("stripe-signature");
-        if(!signature) {
-            return new Response("Invalid request", {status: 400});
+        const headersList = await headers(); // Await the headers function
+        const signature = headersList.get("stripe-signature");
+        if (!signature) {
+            return new Response("Invalid request", { status: 400 });
         }
         const event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
-        if(event.type === 'checkout.session.completed') {
-            if(!event.data.object.customer_details?.email) {
+        if (event.type === 'checkout.session.completed') {
+            if (!event.data.object.customer_details?.email) {
                 throw new Error("No email found");
             }
 
             const session = event.data.object as Stripe.Checkout.Session;
 
-            const { userId, orderId } = session.metadata || { userId: null, orderId: null};
+            const { userId, orderId } = session.metadata || { userId: null, orderId: null };
 
-            if(!userId || !orderId) {
+            if (!userId || !orderId) {
                 throw new Error("No metadata found");
             }
 
-            const billingAddress = session.customer_details!.address
-            const shippingAddress = session.shipping_details!.address
-            
+            const billingAddress = session.customer_details!.address;
+            const shippingAddress = session.shipping_details!.address;
+
             await prisma.order.update({
                 where: {
                     id: orderId
@@ -55,13 +56,13 @@ export async function POST(req:Request) {
                         }
                     }
                 }
-            })
+            });
         }
 
-        return NextResponse.json({result: event, ok: true});
+        return NextResponse.json({ result: event, ok: true });
     } catch (error) {
         console.error(error);
-        
-        return NextResponse.json({error: "Something went wrong", ok: false}, {status: 500});
+
+        return NextResponse.json({ error: "Something went wrong", ok: false }, { status: 500 });
     }
 }
