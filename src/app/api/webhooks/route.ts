@@ -21,13 +21,13 @@ export async function POST(req: Request) {
             const session = event.data.object as Stripe.Checkout.Session;
 
             const { userId, orderId } = session.metadata || { userId: null, orderId: null };
-
+      
             if (!userId || !orderId) {
                 throw new Error("No metadata found");
             }
 
             const billingAddress = session.customer_details!.address;
-            const shippingAddress = session.shipping_details!.address;
+            const shippingAddress = session.shipping_details!.address;         
 
             await prisma.order.update({
                 where: {
@@ -62,7 +62,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ result: event, ok: true });
     } catch (error) {
         console.error(error);
-
         return NextResponse.json({ error: "Something went wrong", ok: false }, { status: 500 });
     }
 }
