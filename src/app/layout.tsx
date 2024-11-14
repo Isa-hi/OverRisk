@@ -6,6 +6,7 @@ import MinimalFooter from "@/components/MinimalFooter";
 import { Toaster } from "@/components/ui/toaster";
 import Providers from "@/components/Providers";
 import { constructMetadata } from "@/lib/utils";
+import { AuthProvider } from "./AuthProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,19 +27,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Navbar />
-        <main className="flex flex-col min-h-[calc(100vh-3.5rem-1px)]">
-          <div className="flex-1 flex flex-col h-full">
-            <Providers>{children}</Providers>
-          </div>
-        </main>
-        <Toaster />
-        <MinimalFooter />
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <Navbar />
+          <main className="flex flex-col min-h-[calc(100vh-3.5rem-1px)]">
+            <div className="flex-1 flex flex-col h-full">
+              <Providers>{children}</Providers>
+            </div>
+          </main>
+          <Toaster />
+          <MinimalFooter />
+        </body>
+      </html>
+    </AuthProvider>
   );
 }
