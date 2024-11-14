@@ -4,6 +4,7 @@ import { buttonVariants } from "./ui/button";
 import { ArrowRight, ShoppingCartIcon } from "lucide-react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export default async function Navbar() {
   const { getUser } = getKindeServerSession();
@@ -69,24 +70,22 @@ export default async function Navbar() {
               </>
             ) : (
               <>
-                <Link
-                  href="/api/auth/register"
+                <RegisterLink
                   className={buttonVariants({
                     size: "sm",
                     variant: "ghost",
                   })}
                 >
                   Registrarse
-                </Link>
-                <Link
-                  href="/api/auth/login"
+                </RegisterLink>
+                <LoginLink
                   className={buttonVariants({
                     size: "sm",
                     variant: "ghost",
                   })}
                 >
                   Iniciar sesión
-                </Link>
+                </LoginLink>
 
                 <div className="w-px h-8 bg-orange-200 hidden sm:block" />
 
