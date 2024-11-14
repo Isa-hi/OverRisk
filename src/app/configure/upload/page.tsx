@@ -6,20 +6,20 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
 import { ImageIcon, Loader2, MousePointerSquareDashed } from "lucide-react";
 import { redirect } from "next/navigation";
-import { startTransition, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import Dropzone, { FileRejection } from "react-dropzone";
 
 export default function UploadPage() {
   const { toast } = useToast();
   const [isDragOver, setIsDragOver] = useState(false);
-  const [isPending] = useTransition();
-  const [uploadProgress, setUploadProgress] = useState(45);
+  const [isPending, startTransition] = useTransition();
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const {startUpload, isUploading} = useUploadThing("imageUploader", {
     onClientUploadComplete: ([data]) => {
       const configId = data.serverData.configId;
-      startTransition(() => {
-        redirect(`/configure/design?id=${configId}`);
+      startTransition(() => {         
+       redirect(`/configure/design?id=${configId}`);
       })
     },
     onUploadProgress(p) {
@@ -28,7 +28,6 @@ export default function UploadPage() {
   })
 
   const onDropAccepted = (acceptedFiles: File[]) => {
-    console.log("Archivo aceptado");
     startUpload(acceptedFiles, { configId: undefined })
     setIsDragOver(false);
   };
@@ -91,8 +90,9 @@ export default function UploadPage() {
                         <p>Subiendo tu imagen...</p>
                         <Progress value={uploadProgress} className="mt-2 w-40 h-2 bg-gray-300" />
                     </div>
-                  ) : isPending ? (
-                    <div className="flex flex-col items-center">
+                  ) : !isUploading && uploadProgress > 1 ? (
+                    <div className="flex flex-col text-xl font-bold items-center">
+                      <Loader2 className="animate-spin size-10 text-zinc-500 mt-6" />
                         <p>Redirigiendo, por favor espera... </p>
                     </div>
                   ) : isDragOver && (
