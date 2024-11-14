@@ -9,7 +9,6 @@ import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs/server";
 export default async function Navbar() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  console.log(user);
   
   if (user) {
     const isUserInDB = await prisma.user.findUnique({

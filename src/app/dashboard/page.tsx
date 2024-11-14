@@ -21,6 +21,8 @@ import StatusDropdown from "./StatusDropdown";
 export default async function Page() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+  console.log(user);
+  
 
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
