@@ -4,7 +4,7 @@ import { buttonVariants } from "./ui/button";
 import { ArrowRight, ShoppingCartIcon } from "lucide-react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs/server";
+import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export default async function Navbar() {
   const { getUser } = getKindeServerSession();
@@ -38,15 +38,14 @@ export default async function Navbar() {
           <div className="h-full flex items-center space-x-4">
             {user ? (
               <>
-                {/* <Link
-                  href="/api/auth/logout"
+                <LogoutLink
                   className={buttonVariants({
                     size: "sm",
                     variant: "ghost",
                   })}
                 >
                   Cerrar sesión
-                </Link> */}
+                </LogoutLink>
                 {isAdmin && (
                   <Link
                     href="/dashboard"
