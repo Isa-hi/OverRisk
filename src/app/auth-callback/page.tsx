@@ -17,26 +17,19 @@ export default function Page() {
     }
   }, []);
 
-  const { data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ["auth-callback"],
     queryFn: async () => await getAuthStatus(),
     retry: true,
     retryDelay: 500,
   });
 
-  useEffect(() => {
-    if (error) {
-      console.error("Error fetching auth status:", error);
-      router.push("/error");
-      return;
-    }
-    if (data?.success && configId) {
-      localStorage.removeItem("configurationId");
-      router.push(`/configure/preview?id=${configId}`);
-    } else {
-      router.push("/");
-    }
-  }, [data, error]);
+  if (data?.success && configId) {
+    localStorage.removeItem("configurationId");
+    router.push(`/configure/preview?id=${configId}`);
+  } else {
+    router.push("/");
+  }
 
   return (
     <div className="w-full mt-24 flex justify-center">
