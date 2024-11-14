@@ -6,7 +6,6 @@ import MinimalFooter from "@/components/MinimalFooter";
 import { Toaster } from "@/components/ui/toaster";
 import Providers from "@/components/Providers";
 import { constructMetadata } from "@/lib/utils";
-import { AuthProvider } from "./AuthProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
