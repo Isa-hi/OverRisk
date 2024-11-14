@@ -25,7 +25,7 @@ export default function Page() {
   });
 
   useEffect(() => {
-    if (data?.success) {
+    if (data?.success && configId) {
       localStorage.removeItem("configurationId");
       router.push(`/configure/preview?id=${configId}`);
     } else {

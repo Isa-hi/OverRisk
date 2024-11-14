@@ -23,9 +23,7 @@ export default async function ClothesStoreCards() {
     id: 4,
     name: "Item uno",
     price: 159.99
-  }]
-  console.log(clothingItems);
-  
+  }] 
 
   return (
     <div className="container mx-auto py-8">
