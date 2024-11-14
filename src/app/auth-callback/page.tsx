@@ -17,7 +17,7 @@ export default function Page() {
     }
   }, []);
 
-  const { data } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ["auth-callback"],
     queryFn: async () => await getAuthStatus(),
     retry: true,
@@ -25,13 +25,18 @@ export default function Page() {
   });
 
   useEffect(() => {
+    if (error) {
+      console.error("Error fetching auth status:", error);
+      router.push("/error");
+      return;
+    }
     if (data?.success && configId) {
       localStorage.removeItem("configurationId");
       router.push(`/configure/preview?id=${configId}`);
     } else {
       router.push("/");
     }
-  }, [data]);
+  }, [data, error]);
 
   return (
     <div className="w-full mt-24 flex justify-center">

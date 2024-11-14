@@ -4,6 +4,12 @@ import { prisma } from "@/lib/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 
 export const getAuthStatus = async () => {
+    // Add CORS headers
+    const headers = new Headers();
+    headers.append("Access-Control-Allow-Origin", "*");
+    headers.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    headers.append("Access-Control-Allow-Headers", "Content-Type");
+
     const { getUser } = getKindeServerSession();
     const user = await getUser();
 
@@ -26,6 +32,6 @@ export const getAuthStatus = async () => {
         })
     }
 
-    return { success: true }
+    return { success: true, headers }
 
 }
