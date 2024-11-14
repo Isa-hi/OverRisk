@@ -66,7 +66,7 @@ export default function ThankYou() {
   }
 
   if (data) {
-    const { config, billingAddress, shippingAddress, amount } = data;
+    const { billingAddress, shippingAddress, amount } = data;
 
     return (
       <>

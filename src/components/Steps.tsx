@@ -55,6 +55,7 @@ export default function Steps() {
                 <span className="flex-shrink-0">
                   <img
                     src={imgPath}
+                    alt=""
                     className={cn(
                       "flex size-24 object-contain items-center justify-center",
                       {

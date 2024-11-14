@@ -30,7 +30,7 @@ export default function DesignPreview({ configuration }: DesignPreviewProps) {
   const [showConfetti, setshowConfetti] = useState(false);
   useEffect(() => {
     setshowConfetti(true);
-  });
+  }, []);
   const confettiConfig = {
     angle: 90,
     spread: 360,

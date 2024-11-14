@@ -69,7 +69,7 @@ export async function POST(req: Request) {
                 react: OrderReceivedEmail({
                     orderId,
                     orderDate: updatedOrder.createdAt.toLocaleDateString(),
-                    // @ts-ignore - We already got the shipping address from stripe
+                    // @ts-expect-error - We already got the shipping address from stripe
                     shippingAddress: {
                         name: session.customer_details!.name!,
                         city: shippingAddress!.city!,
