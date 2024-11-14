@@ -38,7 +38,7 @@ export default async function Navbar() {
           <div className="h-full flex items-center space-x-4">
             {user ? (
               <>
-                <Link
+                {/* <Link
                   href="/api/auth/logout"
                   className={buttonVariants({
                     size: "sm",
@@ -46,7 +46,7 @@ export default async function Navbar() {
                   })}
                 >
                   Cerrar sesión
-                </Link>
+                </Link> */}
                 {isAdmin && (
                   <Link
                     href="/dashboard"
