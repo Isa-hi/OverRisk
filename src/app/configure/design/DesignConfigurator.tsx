@@ -34,30 +34,30 @@ export default function DesignConfigurator({
   imageUrl,
   imageDimensions,
 }: DesignConfiguratorProps) {
-  const {toast} = useToast();
+  const { toast } = useToast();
   const router = useRouter();
 
-  const { mutate : saveConfigMutation } = useMutation({
+  const { mutate: saveConfigMutation, isPending } = useMutation({
     mutationKey: ["save-config"],
-    mutationFn: async (args : SaveConfigProps) => {
-      console.log(args);
-      
-      await Promise.allSettled([saveConfig(), saveConfigToDB(args)])
+    mutationFn: async (args: SaveConfigProps) => {
+      await Promise.allSettled([saveConfig(), saveConfigToDB(args)]);
     },
     onError: () => {
       toast({
-        title: 'Algo salió mal',
-        description: 'No se pudo guardar la configuración. Por favor, intenta de nuevo.',
-        variant: 'destructive'
-      })},
+        title: "Algo salió mal",
+        description:
+          "No se pudo guardar la configuración. Por favor, intenta de nuevo.",
+        variant: "destructive",
+      });
+    },
     onSuccess: () => {
       toast({
-        title: 'Configuración guardada',
-        description: 'La configuración se guardó correctamente.'
-      })
-      router.push(`/configure/preview?id=${configId}`)
-    }
-  })
+        title: "Configuración guardada",
+        description: "La configuración se guardó correctamente.",
+      });
+      router.push(`/configure/preview?id=${configId}`);
+    },
+  });
 
   const [options, setOptions] = useState<{
     color: (typeof COLORS)[number];
@@ -81,13 +81,19 @@ export default function DesignConfigurator({
   const clotheRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { startUpload } = useUploadThing('imageUploader')
+  const { startUpload } = useUploadThing("imageUploader");
 
   async function saveConfig() {
     try {
       toggleHandles(false); // Hide handles and border
-      const {left: clotheLeft, top: clotheTop} = clotheRef.current!.getBoundingClientRect();
-      const {left: containerLeft, top: containerTop, width: containerWidth, height: containerHeight} = containerRef.current!.getBoundingClientRect();
+      const { left: clotheLeft, top: clotheTop } =
+        clotheRef.current!.getBoundingClientRect();
+      const {
+        left: containerLeft,
+        top: containerTop,
+        width: containerWidth,
+        height: containerHeight,
+      } = containerRef.current!.getBoundingClientRect();
 
       const leftOffset = clotheLeft - containerLeft;
       const topOffset = clotheTop - containerTop;
@@ -95,55 +101,65 @@ export default function DesignConfigurator({
       const actualX = renderedPosition.x + leftOffset;
       const actualY = renderedPosition.y + topOffset;
 
-      const canvas = document.createElement('canvas');
+      const canvas = document.createElement("canvas");
       canvas.width = containerWidth;
       canvas.height = containerHeight;
-      const ctx = canvas.getContext('2d')!;
+      const ctx = canvas.getContext("2d")!;
 
       const containerImage = new Image();
-      containerImage.crossOrigin = 'anonymous';
+      containerImage.crossOrigin = "anonymous";
       containerImage.src = mockupUrl;
-      await new Promise((resolve) => containerImage.onload = resolve);
+      await new Promise((resolve) => (containerImage.onload = resolve));
       ctx.drawImage(containerImage, 0, 0, containerWidth, containerHeight);
 
       const userImage = new Image();
-      userImage.crossOrigin = 'anonymous';
+      userImage.crossOrigin = "anonymous";
       userImage.src = imageUrl;
-      await new Promise((resolve) => userImage.onload = resolve);
-      ctx.drawImage(userImage, actualX, actualY, renderedDimension.width, renderedDimension.height);
+      await new Promise((resolve) => (userImage.onload = resolve));
+      ctx.drawImage(
+        userImage,
+        actualX,
+        actualY,
+        renderedDimension.width,
+        renderedDimension.height
+      );
 
       const base64 = canvas.toDataURL(); // String
-      const base64Data = base64.split(',')[1]; // Remove 44844fgyh4er848tghr84h8
+      const base64Data = base64.split(",")[1]; // Remove 44844fgyh4er848tghr84h8
 
-      const blob = base64ToBlob(base64Data, 'image/png'); // Ahora sí es binario
-      const file = new File([blob], "filename.png", {type: 'image/png'}); // Archivo real
+      const blob = base64ToBlob(base64Data, "image/png"); // Ahora sí es binario
+      const file = new File([blob], "filename.png", { type: "image/png" }); // Archivo real
 
-      await startUpload([file], {configId});
+      await startUpload([file], { configId });
     } catch (error) {
-      console.log(error);      
+      console.log(error);
       toast({
-        title: 'Algo salió mal',
-        description: 'No se pudo guardar la configuración. Por favor, intenta de nuevo.',
-        variant: 'destructive'
-      })
+        title: "Algo salió mal",
+        description:
+          "No se pudo guardar la configuración. Por favor, intenta de nuevo.",
+        variant: "destructive",
+      });
     } finally {
       toggleHandles(true); // Show handles and border
     }
   }
 
   function toggleHandles(show: boolean) {
-    const handles = clotheRef.current!.querySelectorAll('.handle-component');
-    handles.forEach(handle => {
-      (handle as HTMLElement).style.display = show ? 'block' : 'none';
+    const handles = clotheRef.current!.querySelectorAll(".handle-component");
+    handles.forEach((handle) => {
+      (handle as HTMLElement).style.display = show ? "block" : "none";
     });
-    (clotheRef.current as HTMLElement).style.border = show ? '3px solid var(--primary)' : 'none';
+    (clotheRef.current as HTMLElement).style.border = show
+      ? "3px solid var(--primary)"
+      : "none";
   }
 
-  function base64ToBlob(base64: string, type: string) { // Function to convert a base64 image to a png
+  function base64ToBlob(base64: string, type: string) {
+    // Function to convert a base64 image to a png
     const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length); 
+    const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i); 
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
     return new Blob([byteArray], { type });
@@ -283,20 +299,30 @@ export default function DesignConfigurator({
           <div className="h-px w-full bg-zinc-200" />
           <div className="size-full flex justify-end items-center">
             <div className="w-full flex gap-6 items-center">
-                <p className="font-medium whitespace-nowrap">
+              <p className="font-medium whitespace-nowrap">
                 Total: {formatPrice(options.size.price + options.model.price)}
-                </p>
-              <Button size={'sm'} className="w-full" onClick={ () => saveConfigMutation({configId, 
-                clotheColor: options.color.value, 
-                clotheSize: options.size.value as ClotheSize, 
-                clotheModel: options.model.value as ClotheModel,
-                price: options.size.price + options.model.price
-              })}>Continuar <ArrowRight className="size-4 ml-1.5 inline" /></Button>
+              </p>
+              <Button
+                isLoading={isPending}
+                disabled={isPending}
+                loadingText="Cargando"
+                size={"sm"}
+                className="w-full"
+                onClick={() =>
+                  saveConfigMutation({
+                    configId,
+                    clotheColor: options.color.value,
+                    clotheSize: options.size.value as ClotheSize,
+                    clotheModel: options.model.value as ClotheModel,
+                    price: options.size.price + options.model.price,
+                  })
+                }
+              >
+                Continuar <ArrowRight className="size-4 ml-1.5 inline" />
+              </Button>
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   );
