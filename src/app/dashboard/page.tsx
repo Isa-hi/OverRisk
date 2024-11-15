@@ -17,12 +17,12 @@ import { formatPrice } from "@/lib/utils";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { notFound } from "next/navigation";
 import StatusDropdown from "./StatusDropdown";
+import ProductsSection from "./ProductsSection";
 
 export default async function Page() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   console.log(user);
-  
 
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
@@ -56,56 +56,62 @@ export default async function Page() {
   });
 
   return (
-    <div className="flex min-h-screen w-full bg-muted/40">
-      <div className="max-w-7xl w-full mx-auto flex flex-col sm:gap-4 sm:py-4">
-        <div className="flex flex-col gap-16">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Cliente</TableHead>
-                <TableHead className="hidden sm:table-cell">Estado</TableHead>
-                <TableHead className="hidden sm:table-cell">
-                  Fecha de compra
-                </TableHead>
-                <TableHead className="text-right">Monto</TableHead>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order.id} className="bg-accent">
-                  <TableCell>
-                    <div>{order.shippingAddress?.name}</div>
-                    <div className="hidden text-sm text-muted-foreground md:inline">
-                      {order.user.email}
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <StatusDropdown id={order.id} orderStatus={order.status} />
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {order.createdAt.toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {formatPrice(order.amount / 100)}
-                  </TableCell>
+    <>
+      <div className="flex min-h-screen w-full bg-muted/40">
+        <div className="max-w-7xl w-full mx-auto flex flex-col sm:gap-4 sm:py-4">
+          <div className="flex flex-col gap-16">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Cliente</TableHead>
+                  <TableHead className="hidden sm:table-cell">Estado</TableHead>
+                  <TableHead className="hidden sm:table-cell">
+                    Fecha de compra
+                  </TableHead>
+                  <TableHead className="text-right">Monto</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>Semana pasada</CardDescription>
-                <CardTitle className="text-4xl">
-                  {" "}
-                  {formatPrice((lastWeekSum._sum.amount ?? 0) / 100)}
-                </CardTitle>
-              </CardHeader>
-            </Card>
+              </TableHeader>
+
+              <TableBody>
+                {orders.map((order) => (
+                  <TableRow key={order.id} className="bg-accent">
+                    <TableCell>
+                      <div>{order.shippingAddress?.name}</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        {order.user.email}
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      <StatusDropdown
+                        id={order.id}
+                        orderStatus={order.status}
+                      />
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {order.createdAt.toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {formatPrice(order.amount / 100)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Semana pasada</CardDescription>
+                  <CardTitle className="text-4xl">
+                    {" "}
+                    {formatPrice((lastWeekSum._sum.amount ?? 0) / 100)}
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <ProductsSection />
+    </>
   );
 }
