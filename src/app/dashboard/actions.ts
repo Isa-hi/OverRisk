@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { productFormType } from "@/schema";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, Product } from "@prisma/client";
 
 type changeOrderStatusProps = {
     id: string;
@@ -31,4 +31,12 @@ export async function createProduct({productName, price, stock, image} : product
             image
         }
     })
-} 
+}
+
+export async function deleteProduct(id : Product['id']) {
+    await prisma.product.delete({
+        where: {
+            id
+        }
+    })
+}

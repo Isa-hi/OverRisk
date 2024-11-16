@@ -1,29 +1,18 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-//import { prisma } from "@/lib/prisma"
-import { ShoppingCart } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { prisma } from "@/lib/prisma";
+import { ShoppingCart } from "lucide-react";
+import Image from "next/image";
+import { AspectRatio } from "../ui/aspect-ratio";
 
 export default async function ClothesStoreCards() {
-
-  //const clothingItems = await prisma.product.findMany()
-  const clothingItems = [{
-    id: 1,
-    name: "Item uno",
-    price: 159.99
-  }, {
-    id: 2,
-    name: "Item uno",
-    price: 159.99
-  },
-  {
-    id: 3,
-    name: "Item uno",
-    price: 159.99
-  }, {
-    id: 4,
-    name: "Item uno",
-    price: 159.99
-  }] 
+  const clothingItems = await prisma.product.findMany();
 
   return (
     <div className="container mx-auto py-8">
@@ -31,11 +20,17 @@ export default async function ClothesStoreCards() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {clothingItems.map((item) => (
           <Card key={item.id} className="flex flex-col justify-between">
-            <CardHeader>
-            </CardHeader>
+            <CardHeader></CardHeader>
             <CardContent>
+              <AspectRatio ratio={1 / 1}>
+                <div className="w-full h-44 relative bg-cover contain-content">
+                  <Image fill src={item.image} alt={""} />
+                </div>
+              </AspectRatio>
               <CardTitle className="text-lg mb-2">{item.name}</CardTitle>
-              <p className="text-primary font-medium">${item.price.toFixed(2)}</p>
+              <p className="text-primary font-medium">
+                ${item.price.toFixed(2)}
+              </p>
             </CardContent>
             <CardFooter>
               <Button className="w-full">
@@ -46,5 +41,5 @@ export default async function ClothesStoreCards() {
         ))}
       </div>
     </div>
-  )
+  );
 }
