@@ -65,3 +65,11 @@ export async function getProductById(id: Product['id']) {
         }
     })
 }
+
+export async function getUserShoppingCart(userId: string) {
+    return await prisma.shoppingCart.findFirst({
+        where: {
+            userId
+        }
+    })
+}
