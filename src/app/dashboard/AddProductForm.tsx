@@ -14,7 +14,7 @@ import { z } from "zod";
 import { createProduct } from "./actions";
 
 export default function AddProductForm() {
-  const { handleSubmit, control } = useForm<productFormType>();
+  const { handleSubmit, control, reset } = useForm<productFormType>();
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [imgURL, setImgURL] = useState("");
@@ -56,12 +56,14 @@ export default function AddProductForm() {
       });
     },
     onSuccess: () => {
+      reset();
+      setImgURL("");
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast({
         title: "Producto guardado",
         description: "El producto fue guardado correctamente",
         className: "border-green-500 border-2",
-      })
+      });
     },
   });
 
@@ -100,7 +102,7 @@ export default function AddProductForm() {
           render={({ field }) => (
             <FormItem>
               <label>Nombre del producto</label>
-              <Input {...field} />
+              <Input {...field} value={field.value || ''} onChange={field.onChange} />
             </FormItem>
           )}
         />
@@ -110,7 +112,7 @@ export default function AddProductForm() {
           render={({ field }) => (
             <FormItem>
               <label>Descripción del producto</label>
-              <Input {...field} />
+              <Input {...field} value={field.value || ''} onChange={field.onChange} />
             </FormItem>
           )}
         />
@@ -120,7 +122,7 @@ export default function AddProductForm() {
           render={({ field }) => (
             <FormItem>
               <label>Stock</label>
-              <Input type="number" {...field} />
+              <Input type="number" {...field} value={field.value || ''} onChange={field.onChange} />
             </FormItem>
           )}
         />
@@ -130,7 +132,7 @@ export default function AddProductForm() {
           render={({ field }) => (
             <FormItem>
               <label>Precio</label>
-              <Input type="number" {...field} />
+              <Input type="number" {...field} value={field.value || ''} onChange={field.onChange} />
             </FormItem>
           )}
         />
