@@ -3,7 +3,7 @@
 import { z } from "zod";
 
 export const productFormSchema = z.object({
-    productName: z.string(),
+    name: z.string(),
     price: z.number(),
     description: z.string(),
     stock: z.number(),

@@ -14,14 +14,16 @@ import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useEffect, useState } from "react";
 import { Product } from "@prisma/client";
 import { useToast } from "@/hooks/use-toast";
-import { PencilLineIcon, Trash2Icon } from "lucide-react";
-import AddProductForm from "./AddProductForm";
+import { CirclePlusIcon, PencilLineIcon, Trash2Icon } from "lucide-react";
+import ProductForm from "./ProductForm";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function ProductsSection() {
   const [products, setProducts] = useState<Product[]>([]);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const {
     data: productsQueryData,
@@ -64,6 +66,11 @@ export default function ProductsSection() {
     deleteProductMutation(id);
   };
 
+  const handleEditProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setIsDialogOpen(true);
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -74,13 +81,16 @@ export default function ProductsSection() {
 
   return (
     <>
-      <Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTitle className="hidden">Agregar producto</DialogTitle>
         <DialogTrigger asChild>
-          <Button className="mb-2">Agregar producto</Button>
+          <Button className="mb-2" onClick={() => setSelectedProduct(null)}>
+            {" "}
+            <CirclePlusIcon className="size-5" /> Agregar producto
+          </Button>
         </DialogTrigger>
-        <DialogContent className="absolute z-[9999]">
-          <AddProductForm />
+        <DialogContent className="absolute z-[9999] m-20">
+          <ProductForm product={selectedProduct} setIsDialogOpen={setIsDialogOpen} />
         </DialogContent>
       </Dialog>
       <Table className="mb-12">
@@ -95,10 +105,13 @@ export default function ProductsSection() {
           {products.map((product) => (
             <TableRow key={product.id}>
               <TableCell>{product.name}</TableCell>
-              <TableCell>1</TableCell>
+              <TableCell>{product.stock}</TableCell>
               <TableCell>{product.price}</TableCell>
               <TableCell className="gap-3 flex">
-                <Button variant="outline">
+                <Button
+                  variant="outline"
+                  onClick={() => handleEditProduct(product)}
+                >
                   <PencilLineIcon />
                 </Button>
                 <Button

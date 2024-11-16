@@ -6,18 +6,51 @@ import { toast } from "@/hooks/use-toast";
 import { useUploadThing } from "@/lib/uploadthing";
 import { productFormSchema, productFormType } from "@/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ImageIcon, Loader2, MousePointerSquareDashed } from "lucide-react";
-import { useState } from "react";
+import {
+  ImageIcon,
+  Loader2,
+  MousePointerSquareDashed,
+  SaveIcon,
+} from "lucide-react";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import Dropzone, { FileRejection } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createProduct } from "./actions";
+import { createProduct, editProduct } from "./actions";
+import { Product } from "@prisma/client";
 
-export default function AddProductForm() {
-  const { handleSubmit, control, reset } = useForm<productFormType>();
+type ProductFormProps = {
+  product?: Product | null;
+  setIsDialogOpen?: Dispatch<SetStateAction<boolean>>;
+};
+
+export default function ProductForm({
+  product,
+  setIsDialogOpen,
+}: ProductFormProps) {
+  const { handleSubmit, control, reset } = useForm<productFormType>({
+    defaultValues: {
+      name: product?.name || "",
+      description: product?.description || "",
+      stock: product?.stock || 0,
+      price: product?.price || 0,
+      image: product?.image || "",
+    },
+  });
+
+  useEffect(() => {
+    reset({
+      name: product?.name || "",
+      description: product?.description || "",
+      stock: product?.stock || 0,
+      price: product?.price || 0,
+      image: product?.image || "",
+    });
+  }, [product, reset]);
+
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [imgURL, setImgURL] = useState("");
+  const [imgURL, setImgURL] = useState(product?.image || "");
   const queryClient = useQueryClient();
 
   const { startUpload, isUploading } = useUploadThing("imageUploader", {
@@ -82,27 +115,30 @@ export default function AddProductForm() {
       });
     }
     if (parsedData.data) {
-      createProductMutation(parsedData.data);
+      if (product && setIsDialogOpen) {
+        editProduct(product.id, parsedData.data);
+        setIsDialogOpen(false);
+      } else {
+        createProductMutation(parsedData.data);
+      }
+      reset();
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      console.log("Se invalidó esa wea");
-      
     }
   };
-
 
   return (
     <>
       <h3 className="text-2xl font-bold my-4 text-orange-500 ">
-        Agregar un producto
+        {product ? "Editar producto" : "Agregar un producto"}
       </h3>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormField
-          name="productName"
+          name="name"
           control={control}
           render={({ field }) => (
             <FormItem>
               <label>Nombre del producto</label>
-              <Input {...field} value={field.value || ''} onChange={field.onChange} />
+              <Input {...field} />
             </FormItem>
           )}
         />
@@ -112,7 +148,7 @@ export default function AddProductForm() {
           render={({ field }) => (
             <FormItem>
               <label>Descripción del producto</label>
-              <Input {...field} value={field.value || ''} onChange={field.onChange} />
+              <Input {...field} />
             </FormItem>
           )}
         />
@@ -122,7 +158,7 @@ export default function AddProductForm() {
           render={({ field }) => (
             <FormItem>
               <label>Stock</label>
-              <Input type="number" {...field} value={field.value || ''} onChange={field.onChange} />
+              <Input type="number" {...field} />
             </FormItem>
           )}
         />
@@ -132,14 +168,14 @@ export default function AddProductForm() {
           render={({ field }) => (
             <FormItem>
               <label>Precio</label>
-              <Input type="number" {...field} value={field.value || ''} onChange={field.onChange} />
+              <Input type="number" {...field} />
             </FormItem>
           )}
         />
         <FormField
           name="image"
           control={control}
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <label>Imagen</label>
               <Dropzone
@@ -186,7 +222,7 @@ export default function AddProductForm() {
                             className="mt-2 w-40 h-2 bg-gray-300"
                           />
                         </div>
-                      ) : !isUploading && uploadProgress > 1 ? (
+                      ) : !isUploading ? (
                         <div className="flex flex-col text-xl font-bold items-center">
                           <img className="max-h-40" src={imgURL} />
                         </div>
@@ -210,7 +246,23 @@ export default function AddProductForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Guardar</Button>
+        <div className="flex gap-5">
+          <Button className="mt-4 w-full" type="submit">
+            <SaveIcon /> {product ? "Guardar cambios" : "Crear producto"}
+          </Button>
+          {product && setIsDialogOpen ? (
+            <Button
+              className="mt-4 w-full"
+              onClick={() => {
+                reset();
+                setIsDialogOpen(false);
+              }}
+              variant="destructive"
+            >
+              Cancelar
+            </Button>
+          ) : null}
+        </div>
       </form>
     </>
   );

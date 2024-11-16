@@ -23,10 +23,12 @@ export async function getProducts() {
     return await prisma.product.findMany();
 }
 
-export async function createProduct({productName, price, stock, image} : productFormType) {
+export async function createProduct({name, description, price, stock, image} : productFormType) {
     await prisma.product.create({
         data: {
-            name: productName,
+            name,
+            description,
+            stock,
             price,
             image
         }
@@ -35,6 +37,29 @@ export async function createProduct({productName, price, stock, image} : product
 
 export async function deleteProduct(id : Product['id']) {
     await prisma.product.delete({
+        where: {
+            id
+        }
+    })
+}
+
+export async function editProduct(id: Product['id'], {name, description, price, stock, image} : productFormType) {
+    await prisma.product.update({
+        where: {
+            id
+        },
+        data: {
+            name,
+            description,
+            stock,
+            price,
+            image
+        }
+    })
+}
+
+export async function getProductById(id: Product['id']) {
+    return await prisma.product.findUnique({
         where: {
             id
         }

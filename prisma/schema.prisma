@@ -22,6 +22,8 @@ model Product {
   name         String
   price        Float
   image        String
+  description  String
+  stock        Int
   createdAt    DateTime       @default(now())
   ShoppingCart ShoppingCart[]
 }
