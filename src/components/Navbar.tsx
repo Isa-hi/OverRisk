@@ -67,6 +67,15 @@ export default async function Navbar() {
                   Crear diseño
                   <ArrowRight className="ml-1.5 size-5" />
                 </Link>
+                <Link
+                  href="/shopping-cart"
+                  className={buttonVariants({
+                    size: "sm",
+                    className: "hidden sm:flex items-center gap-1 !bg-black",
+                  })}
+                >
+                  <ShoppingCartIcon className="size-16" />
+                </Link>
               </>
             ) : (
               <>
@@ -98,16 +107,6 @@ export default async function Navbar() {
                 >
                   Crear diseño
                   <ArrowRight className="ml-1.5 size-5" />
-                </Link>
-
-                <Link
-                  href="/shopping-cart"
-                  className={buttonVariants({
-                    size: "sm",
-                    className: "hidden sm:flex items-center gap-1 !bg-black",
-                  })}
-                >
-                  <ShoppingCartIcon className="size-16" />
                 </Link>
               </>
             )}

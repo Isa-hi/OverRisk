@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { OrderStatus } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { changeOrderStatus } from "./actions";
+import { changeOrderStatus } from "../actions";
 import { useRouter } from "next/navigation";
 
 const orderStatusesTranslations: Record<keyof typeof OrderStatus, string> = {

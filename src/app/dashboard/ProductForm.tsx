@@ -16,7 +16,7 @@ import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import Dropzone, { FileRejection } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createProduct, editProduct } from "./actions";
+import { createProduct, editProduct } from "../actions";
 import { Product } from "@prisma/client";
 
 type ProductFormProps = {
