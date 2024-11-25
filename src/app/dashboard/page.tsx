@@ -59,7 +59,7 @@ export default async function Page() {
   return (
     <>
       <MaxWidthWrapper>
-        <div className="flex min-h-screen w-full">
+        <div className="flex mb-10 w-full">
           <div className="max-w-7xl w-full mx-auto flex flex-col sm:gap-4 sm:py-4">
             <div className="flex flex-col gap-16">
               <Table>

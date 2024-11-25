@@ -4,12 +4,16 @@ import { buttonVariants } from "./ui/button";
 import { ArrowRight, ShoppingCartIcon } from "lucide-react";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
+import {
+  RegisterLink,
+  LoginLink,
+  LogoutLink,
+} from "@kinde-oss/kinde-auth-nextjs/server";
 
 export default async function Navbar() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  
+
   if (user) {
     const isUserInDB = await prisma.user.findUnique({
       where: {
@@ -67,6 +71,16 @@ export default async function Navbar() {
                   Crear diseño
                   <ArrowRight className="ml-1.5 size-5" />
                 </Link>
+
+                <Link
+                  href="/shopping-cart"
+                  className={buttonVariants({
+                    size: "sm",
+                    className: "hidden sm:flex items-center gap-1 !bg-black",
+                  })}
+                >
+                  <ShoppingCartIcon className="size-6" />
+                </Link>
               </>
             ) : (
               <>
@@ -98,16 +112,6 @@ export default async function Navbar() {
                 >
                   Crear diseño
                   <ArrowRight className="ml-1.5 size-5" />
-                </Link>
-
-                <Link
-                  href="/shopping-cart"
-                  className={buttonVariants({
-                    size: "sm",
-                    className: "hidden sm:flex items-center gap-1 !bg-black",
-                  })}
-                >
-                  <ShoppingCartIcon className="size-16" />
                 </Link>
               </>
             )}
