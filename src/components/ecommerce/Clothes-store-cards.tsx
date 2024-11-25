@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -6,13 +7,32 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { prisma } from "@/lib/prisma";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { AspectRatio } from "../ui/aspect-ratio";
+import { useMutation } from "@tanstack/react-query";
+import { addProductToShoppingCart } from "@/app/actions";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
+import { ClothingItemCard } from "@/types";
+import { Product } from "@prisma/client";
+import { useToast } from "@/hooks/use-toast";
 
-export default async function ClothesStoreCards() {
-  const clothingItems = await prisma.product.findMany();
+type props = {
+  user: KindeUser<Record<string, any>>
+  clothingItems: ClothingItemCard[]
+}
+export default function ClothesStoreCards({ user, clothingItems }: props) {
+  const { toast } = useToast()
+
+  const { mutate } = useMutation({
+    mutationFn: async (productId : Product['id']) => await addProductToShoppingCart(user.id, productId),
+    onSuccess: () => {
+      toast({
+        title: "Producto añadido al carrito",
+        className: "bg-green-400 border-green-500 text-white",
+      })
+    }
+  })
 
   return (
     <div className="container mx-auto py-8">
@@ -33,7 +53,7 @@ export default async function ClothesStoreCards() {
               </p>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">
+              <Button className="w-full" onClick={() => mutate(item.id)} >
                 <ShoppingCart className="mr-2 h-4 w-4" /> Añadir al carrito
               </Button>
             </CardFooter>

@@ -2,9 +2,16 @@ import ClothesStoreCards from "@/components/ecommerce/Clothes-store-cards";
 import ItemList from "@/components/landing-page/ItemList";
 import UserImageCircle from "@/components/landing-page/UserImageCircle";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import { prisma } from "@/lib/prisma";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Star } from "lucide-react";
 
-export default function Home() {
+export default async function Home() {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  const clothingItems = await prisma.product.findMany();
+
   return (
     <div className="bg-orange-50">
       <section className="text-center">
@@ -82,7 +89,7 @@ export default function Home() {
       {/* ECOMMERCE SECTION */}
       <section className="bg-amber-500">
         <MaxWidthWrapper className="flex flex-col items-center gap-16 sm:gap-32">
-          <ClothesStoreCards />
+          <ClothesStoreCards user={user} clothingItems={clothingItems} />
         </MaxWidthWrapper>
       </section>
 

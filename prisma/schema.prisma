@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id           String       @id @default(cuid())
+  id           String        @id @default(cuid())
   email        String
   name         String?
   createdAt    DateTime      @default(now())
@@ -18,24 +18,23 @@ model User {
 }
 
 model Product {
-  id           Int            @id @default(autoincrement())
-  name         String
-  price        Float
-  image        String
-  description  String
-  stock        Int
-  createdAt    DateTime       @default(now())
-  ShoppingCart ShoppingCart[]
+  id             Int            @id @default(autoincrement())
+  name           String
+  price          Float
+  image          String
+  description    String
+  stock          Int
+  createdAt      DateTime       @default(now())
+  ShoppingCart   ShoppingCart[]
+  shoppingCartId Int?
 }
 
 model ShoppingCart {
-  id        Int      @id @default(autoincrement())
-  userId    String      @unique
-  user      User     @relation(fields: [userId], references: [id])
-  productId Int
-  product   Product  @relation(fields: [productId], references: [id])
-  quantity  Int
-  createdAt DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  userId    String    @unique
+  user      User      @relation(fields: [userId], references: [id])
+  products  Product[]
+  createdAt DateTime  @default(now())
 }
 
 model Configuration {
