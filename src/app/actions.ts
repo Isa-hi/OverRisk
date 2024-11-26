@@ -123,3 +123,18 @@ export async function addProductToShoppingCart(userId: string, productId: Produc
         });
       }
 }
+
+export async function removeProductFromShoppingCart(userId: string, productId: Product['id']) {
+    await prisma.shoppingCart.update({
+        where: {
+            userId
+        },
+        data: {
+            products: {
+                disconnect: {
+                    id: productId
+                }
+            }
+        }
+    })
+}

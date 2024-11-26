@@ -2,47 +2,44 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Product } from "@prisma/client";
 import { ArrowRightIcon, MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-import { ShoppingCart } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
-import { getUser, getUserShoppingCart } from "../actions";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUser, getUserShoppingCart, removeProductFromShoppingCart } from "../actions";
+import { Product } from "@prisma/client";
 
-type ShoppingCartProps = {
-  shoppingCart: ShoppingCart;
-};
-export default function ShoppingCartComponent({
-  shoppingCart,
-}: ShoppingCartProps) {
-  const [UserShoppingCart, setUserShoppingCart] = useState<Product[]>([]);
+export default function ShoppingCartComponent() {
+  const queryClient = useQueryClient();
+  const updateQuantity = async (productId: number, quantity: number) => {}
 
-  const updateQuantity = (id: number, change: number) => {};
-
-  const { data: userData, isError: isErrorInUserData } = useQuery({
+  const { data: userData, isError: isErrorUserData} = useQuery({
     queryKey: ["userData"],
     queryFn: async () => await getUser(),
     retry: 1,
   });
 
-  if (isErrorInUserData) {
-    return <p>Ha ocurrido un error. Inténtalo más tarde. Error </p>;
-  }
-
   const { data, isError, isPending } = useQuery({
     queryKey: ["shoppingCart"],
-    queryFn: async () => await getUserShoppingCart(userData!.id),
+    queryFn: async () => userData ? await getUserShoppingCart(userData.id) : null,
     retry: 1,
+    enabled: !!userData,
   });
 
-  if (isPending) {
-    return <p>Cargando...</p>;
+  const { mutate } = useMutation({
+    mutationFn: (productId : Product['id']) => removeProductFromShoppingCart(userData!.id, productId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["shoppingCart"] }),
+  });
+
+  const handleRemoveProduct = (productId: Product['id']) => {
+    mutate(productId);
   }
 
-  if (isError) {
+  if (isErrorUserData || !userData) {
     return <p>Ha ocurrido un error. Inténtalo más tarde. Error </p>;
   }
+
+  if (isPending) return <p>Cargando...</p>;
+  if (isError) return <p>Ha ocurrido un error. Inténtalo más tarde. Error </p>;
 
   if (data)
     return (
@@ -91,9 +88,9 @@ export default function ShoppingCartComponent({
                     <Button
                       variant="ghost"
                       size="icon"
-                      /* onClick={() =>
-                      updateQuantity(product.id, -product.quantity)
-                    } */
+                      onClick={() =>
+                        handleRemoveProduct(product.id)
+                    }
                       className="ml-2 text-red-500 hover:text-red-700 hover:bg-red-300"
                       aria-label={`Remove ${product.name} from cart`}
                     >
