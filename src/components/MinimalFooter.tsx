@@ -1,8 +1,8 @@
-import { Instagram, Phone } from "lucide-react"
+import { Instagram, MessageCircleIcon, Phone } from "lucide-react"
 
 export default function Footer() {
   return (
-    <footer className="text-black bg-orange-50 py-8 border-t">
+    <footer className="text-gray-700 bg-orange-50 py-8 border-t">
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center space-y-4">
           <p className="text-lg font-semibold text-center">
@@ -24,7 +24,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-primary transition-colors"
             >
-              <Phone className="h-6 w-6" />
+              <MessageCircleIcon className="h-6 w-6" />
               <span className="sr-only">WhatsApp</span>
             </a>
           </div>

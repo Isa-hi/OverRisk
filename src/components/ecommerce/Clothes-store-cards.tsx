@@ -1,5 +1,4 @@
 "use client"
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,32 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ShoppingCart } from "lucide-react";
+import { ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
 import { AspectRatio } from "../ui/aspect-ratio";
-import { useMutation } from "@tanstack/react-query";
-import { addProductToShoppingCart } from "@/app/actions";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import { ClothingItemCard } from "@/types";
-import { Product } from "@prisma/client";
-import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 type props = {
-  user: KindeUser<Record<string, any>>
   clothingItems: ClothingItemCard[]
 }
-export default function ClothesStoreCards({ user, clothingItems }: props) {
-  const { toast } = useToast()
-
-  const { mutate } = useMutation({
-    mutationFn: async (productId : Product['id']) => await addProductToShoppingCart(user.id, productId),
-    onSuccess: () => {
-      toast({
-        title: "Producto añadido al carrito",
-        className: "bg-green-400 border-green-500 text-white",
-      })
-    }
-  })
+export default function ClothesStoreCards({ clothingItems }: props) {
+  
 
   return (
     <div className="container mx-auto py-8">
@@ -53,9 +37,11 @@ export default function ClothesStoreCards({ user, clothingItems }: props) {
               </p>
             </CardContent>
             <CardFooter>
-              <Button className="w-full" onClick={() => mutate(item.id)} >
-                <ShoppingCart className="mr-2 h-4 w-4" /> Añadir al carrito
-              </Button>
+              
+              <Link href={`/clothe-details/${item.id}`} className="flex w-full rounded-md bg-black text-white p-2 pl-5 hover:bg-orange-500 transition-colors">
+                Ver detalles
+                <ChevronRightIcon />
+              </Link>
             </CardFooter>
           </Card>
         ))}
